@@ -252,15 +252,18 @@ class OTSessionManager: RCTEventEmitter {
             var error: OTError?
             if let isPublishing = OTRN.sharedState.isPublishing[publisherId] {
                 if (isPublishing) {
-                    if let sessionId = publisher.session?.sessionId {
-                        guard let session = OTRN.sharedState.sessions[sessionId] else {
-                            let errorInfo = EventUtils.createErrorMessage("Error destroying publisher. Could not find native session instance")
-                            callback([errorInfo]);
-                            return
-                        }
-                        if (session.sessionConnectionStatus.rawValue == 1) {
-                            session.unpublish(publisher, error: &error)
-                        }
+                    guard let sessionId = publisher.session?.sessionId else {
+                        let errorInfo = EventUtils.createErrorMessage("Error destroying publisher. Could not find sessionId")
+                        callback([errorInfo]);
+                        return
+                    }
+                    guard let session = OTRN.sharedState.sessions[sessionId] else {
+                        let errorInfo = EventUtils.createErrorMessage("Error destroying publisher. Could not find native session instance")
+                        callback([errorInfo]);
+                        return
+                    }
+                    if (session.sessionConnectionStatus.rawValue == 1) {
+                        session.unpublish(publisher, error: &error)
                     }
                 }
             }
