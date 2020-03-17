@@ -65,11 +65,11 @@ class OTPublisher extends Component {
     this.createPublisher();
   }
 
-  componentDidUpdate = (previousProps) => {
+  componentDidUpdate = (prevProps) => {
     const useDefault = (value, defaultValue) => ((value === undefined) ? defaultValue : value);
 
     const shouldUpdate = (key, defaultValue) => {
-      var previous = useDefault(previousProps.properties[key], defaultValue);
+      var previous = useDefault(prevProps.properties[key], defaultValue);
       var current = useDefault(this.props.properties[key], defaultValue);
 
       return (previous !== current);
