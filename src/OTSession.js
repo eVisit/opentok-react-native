@@ -142,7 +142,7 @@ export default class OTSession extends Component {
         if (this._currentEventHandlers)
           removeNativeEvents(this._currentEventHandlers);
 
-        callback(null);
+        callback && callback(null);
       }
     });
   }
