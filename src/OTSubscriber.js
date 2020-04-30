@@ -46,20 +46,7 @@ export default class OTSubscriber extends Component {
     });
   }
 
-  initComponent = () => {
-    var { eventHandlers } = this.props;
-    if (!eventHandlers)
-      return;
-
-    this.subscribeToEventHandlers(eventHandlers);
-  }
-
-  componentWillUnmount = () => {
-    if (this._currentEventHandlers)
-      removeNativeEvents(this._currentEventHandlers);
-  }
-
-  componentDidUpdate = (prevProps) => {
+  resubscribe = (prevProps = {}) => {
     if (prevProps.eventHandlers !== this.props.eventHandlers)
       this.subscribeToEventHandlers(this.props.eventHandlers);
 
@@ -85,6 +72,22 @@ export default class OTSubscriber extends Component {
       OT.subscribeToAudio(streamId, subscribeToAudio);
       OT.subscribeToVideo(streamId, subscribeToVideo);
     }
+  }
+
+  initComponent = () => {
+    this.resubscribe();
+  }
+
+  componentWillUnmount = () => {
+    if (this._currentEventHandlers)
+      removeNativeEvents(this._currentEventHandlers);
+
+    if (this.props.stream)
+      this.unsubscribeFromStream(this.props.stream);
+  }
+
+  componentDidUpdate = (prevProps) => {
+    this.resubscribe(prevProps);
   }
 
   render = () => {
