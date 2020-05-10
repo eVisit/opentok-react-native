@@ -1,3 +1,14 @@
+# 0.13.0 (Mar 23, 2020)
+
+- **[Feature]**: Add Session Options support, both [iOS](https://tokbox.com/developer/sdks/ios/reference/Classes/OTSessionSettings.html) and [Android](https://tokbox.com/developer/sdks/android/reference/). Note: iceConfig option is not currently supported
+- **[Feature]**: Update of iOS SDK to `2.16.5` and Android SDK to `2.16.5`
+
+
+# 0.12.2 (Dec 4, 2019)
+
+-   **[Fix]**: Prevent to unpublish on disconnected sessions (merged from [PR356](https://github.com/opentok/opentok-react-native/pull/356)). Adheres to: [#337](https://github.com/opentok/opentok-react-native/issues/337)
+-   **[Feature]**: Add podspec for autolinking support in RN 0.6x (merged from [PR358](https://github.com/opentok/opentok-react-native/pull/358)). Adheres to: [#332](https://github.com/opentok/opentok-react-native/issues/332)
+-   Android SDK updated to `2.16.3`
 
 # 0.12.1 (Aug 30, 2019)
 

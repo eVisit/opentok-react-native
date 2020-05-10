@@ -41,6 +41,11 @@ class OTSessionManager: RCTEventEmitter {
     @objc func initSession(_ apiKey: String, sessionId: String, sessionOptions: Dictionary<String, Any>) -> Void {
         let settings = OTSessionSettings()
         settings.connectionEventsSuppressed = Utils.sanitizeBooleanProperty(sessionOptions["connectionEventsSuppressed"] as Any);
+        // Note: IceConfig is an additional property not supported at the moment. We need to add a sanitize function
+        // to validate the input from settings.iceConfig.
+        // settings.iceConfig = sessionOptions["iceConfig"];
+        settings.proxyURL = Utils.sanitizeStringProperty(sessionOptions["proxyUrl"] as Any);
+        settings.ipWhitelist = Utils.sanitizeBooleanProperty(sessionOptions["ipWhitelist"] as Any);
         OTRN.sharedState.sessions.updateValue(OTSession(apiKey: apiKey, sessionId: sessionId, delegate: self, settings: settings)!, forKey: sessionId);
     }
     
@@ -252,18 +257,15 @@ class OTSessionManager: RCTEventEmitter {
             var error: OTError?
             if let isPublishing = OTRN.sharedState.isPublishing[publisherId] {
                 if (isPublishing) {
-                    guard let sessionId = publisher.session?.sessionId else {
-                        let errorInfo = EventUtils.createErrorMessage("Error destroying publisher. Could not find sessionId")
-                        callback([errorInfo]);
-                        return
-                    }
-                    guard let session = OTRN.sharedState.sessions[sessionId] else {
-                        let errorInfo = EventUtils.createErrorMessage("Error destroying publisher. Could not find native session instance")
-                        callback([errorInfo]);
-                        return
-                    }
-                    if (session.sessionConnectionStatus.rawValue == 1) {
-                        session.unpublish(publisher, error: &error)
+                    if let sessionId = publisher.session?.sessionId {
+                        guard let session = OTRN.sharedState.sessions[sessionId] else {
+                            let errorInfo = EventUtils.createErrorMessage("Error destroying publisher. Could not find native session instance")
+                            callback([errorInfo]);
+                            return
+                        }
+                        if (session.sessionConnectionStatus.rawValue == 1) {
+                            session.unpublish(publisher, error: &error)
+                        }
                     }
                 }
             }
