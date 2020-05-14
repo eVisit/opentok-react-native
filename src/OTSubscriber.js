@@ -50,14 +50,6 @@ export default class OTSubscriber extends Component {
     if (prevProps.eventHandlers !== this.props.eventHandlers)
       this.subscribeToEventHandlers(this.props.eventHandlers);
 
-    if (prevProps.stream !== this.props.stream) {
-      if (prevProps.stream)
-        this.unsubscribeFromStream(prevProps.stream);
-
-      if (this.props.stream)
-        this.subscribeToStream(this.props.stream);
-    }
-
     if (prevProps.properties !== this.props.properties) {
       if (!this.props.properties)
         return;
@@ -81,9 +73,6 @@ export default class OTSubscriber extends Component {
   componentWillUnmount = () => {
     if (this._currentEventHandlers)
       removeNativeEvents(this._currentEventHandlers);
-
-    if (this.props.stream)
-      this.unsubscribeFromStream(this.props.stream);
   }
 
   componentDidUpdate = (prevProps) => {
