@@ -1,13 +1,13 @@
 package com.opentokreactnative;
 
 import android.opengl.GLSurfaceView;
-import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.opentok.android.BaseVideoRenderer;
 import com.opentok.android.Subscriber;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -52,6 +52,11 @@ public class OTSubscriberLayout extends FrameLayout{
                     ((GLSurfaceView) mSubscriber.getView()).setZOrderMediaOverlay(true);
                 } else {
                     ((GLSurfaceView) mSubscriber.getView()).setZOrderOnTop(true);
+                }
+            }
+            if (pubOrSub.equals("publisher") && mSubscriber.getView() instanceof GLSurfaceView) {
+                if (zOrder.equals("mediaOverlay")) {
+                    ((GLSurfaceView) mSubscriber.getView()).setZOrderMediaOverlay(false);
                 }
             }
             ConcurrentHashMap<String, FrameLayout> mSubscriberViewContainers = sharedState.getSubscriberViewContainers();
