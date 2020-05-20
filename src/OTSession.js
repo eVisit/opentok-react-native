@@ -137,7 +137,7 @@ export default class OTSession extends Component {
     OT.disconnectSession(this.props.sessionId, (disconnectError) => {
       if (disconnectError) {
         this.otrnEventHandler(disconnectError);
-        callback(disconnectError);
+        callback && callback(disconnectError);
       } else {
         if (this._currentEventHandlers)
           removeNativeEvents(this._currentEventHandlers);
