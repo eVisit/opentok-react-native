@@ -112,7 +112,7 @@ export default class OTSession extends Component {
           const sessionInfo = { ...session, connectionStatus: getConnectionStatus(session.connectionStatus)};
           this.setState({ sessionInfo });
 
-          logOT(apiKey, sessionId, 'rn_on_connect', session.connection.connectionId);
+          logOT({ apiKey, sessionId, action: 'rn_on_connect', proxyUrl: sessionOptions.proxyUrl, connectionId: session.connection.connectionId });
 
           if (Object.keys(signal).length > 0)
             this.signal(signal);
