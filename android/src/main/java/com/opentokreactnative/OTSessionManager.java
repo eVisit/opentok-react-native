@@ -264,7 +264,10 @@ public class OTSessionManager extends ReactContextBaseJavaModule
         Session mSession = mSessions.get(sessionId);
         mSessionDisconnectCallbacks.put(sessionId, callback);
         if (mSession != null) {
-            mSession.disconnect();
+            try {
+                mSession.disconnect();
+            } catch (Exception e) {
+            }
         }
     }
 
