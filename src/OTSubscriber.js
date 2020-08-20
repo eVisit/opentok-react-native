@@ -18,63 +18,11 @@ export default class OTSubscriber extends Component {
 
     this.initComponent();
   }
-<<<<<<< HEAD
 
   subscribeToEventHandlers = (eventHandlers) => {
     if (this._currentEventHandlers) {
       removeNativeEvents(this._currentEventHandlers);
       this._currentEventHandlers = null;
-=======
-  initComponent = () => {
-    const { eventHandlers } = this.props;
-    const { sessionId } = this.context;
-    if (sessionId) {
-      this.streamCreated = nativeEvents.addListener(`${sessionId}:${this.componentEvents.streamCreated}`,
-        stream => this.streamCreatedHandler(stream));
-      this.streamDestroyed = nativeEvents.addListener(`${sessionId}:${this.componentEvents.streamDestroyed}`,
-        stream => this.streamDestroyedHandler(stream));
-      const subscriberEvents = sanitizeSubscriberEvents(eventHandlers);
-      OT.setJSComponentEvents(this.componentEventsArray);
-      setNativeEvents(subscriberEvents);
-    }
-  }
-  componentDidUpdate() {
-    const { streamProperties } = this.props;
-    if (!isEqual(this.state.streamProperties, streamProperties)) {
-      each(streamProperties, (individualStreamProperties, streamId) => {
-        const { subscribeToAudio, subscribeToVideo } = individualStreamProperties;
-        OT.subscribeToAudio(streamId, subscribeToAudio);
-        OT.subscribeToVideo(streamId, subscribeToVideo);
-      });
-      this.setState({ streamProperties });
-    }
-  }
-  componentWillUnmount() {
-    this.streamCreated.remove();
-    this.streamDestroyed.remove();
-    OT.removeJSComponentEvents(this.componentEventsArray);
-    const events = sanitizeSubscriberEvents(this.props.eventHandlers);
-    removeNativeEvents(events);
-  }
-  streamCreatedHandler = (stream) => {
-    const { subscribeToSelf } = this.state;
-    const { streamProperties, properties } = this.props;
-    const { sessionId, sessionInfo } = this.context;
-    const subscriberProperties = isNull(streamProperties[stream.streamId]) ?
-                                  sanitizeProperties(properties) : sanitizeProperties(streamProperties[stream.streamId]);
-    // Subscribe to streams. If subscribeToSelf is true, subscribe also to his own stream
-    const sessionInfoConnectionId = sessionInfo && sessionInfo.connection ? sessionInfo.connection.connectionId : null;
-    if (subscribeToSelf || (sessionInfoConnectionId !== stream.connectionId)){
-      OT.subscribeToStream(stream.streamId, sessionId, subscriberProperties, (error) => {
-        if (error) {
-          this.otrnEventHandler(error);
-        } else {
-          this.setState({
-            streams: [...this.state.streams, stream.streamId],
-          });
-        }
-      });
->>>>>>> 1baf9895876974c14892ceff525c2fe4d2920ef5
     }
 
     if (!eventHandlers)
@@ -91,8 +39,8 @@ export default class OTSubscriber extends Component {
     });
   }
 
-  subscribeToStream = (stream) => {
-    OT.subscribeToStream(stream.streamId, sanitizeProperties(this.props.properties), (error) => {
+  subscribeToStream = (stream, sessionId) => {
+    OT.subscribeToStream(stream.streamId, sessionId, sanitizeProperties(this.props.properties), (error) => {
       if (error)
         this.otrnEventHandler(error);
     });
