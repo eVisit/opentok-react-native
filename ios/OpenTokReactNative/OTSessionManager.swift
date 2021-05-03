@@ -96,6 +96,7 @@ class OTSessionManager: RCTEventEmitter {
             publisher.publishAudio = Utils.sanitizeBooleanProperty(properties["publishAudio"] as Any);
             publisher.publishVideo = Utils.sanitizeBooleanProperty(properties["publishVideo"] as Any);
             publisher.audioLevelDelegate = self;
+            publisher.networkStatsDelegate = self;
             callback([NSNull()]);
         }
     }
@@ -505,6 +506,46 @@ extension OTSessionManager: OTPublisherKitAudioLevelDelegate {
         let publisherId = Utils.getPublisherId(publisher as! OTPublisher);
         if (publisherId.count > 0) {
             self.emitEvent("\(publisherId):\(EventUtils.publisherPreface)audioLevelUpdated", data: audioLevel)
+        }
+    }
+}
+
+extension OTSessionManager: OTPublisherKitNetworkStatsDelegate {
+    func publisher(_ publisher: OTPublisherKit, videoNetworkStatsUpdated stats: [OTPublisherKitVideoNetworkStats]) {
+        let publisherId = Utils.getPublisherId(publisher as! OTPublisher);
+        if (publisherId.count == 0) {
+            return;
+        }
+
+        for record in stats {
+            var publisherInfo: Dictionary<String, Any> = [:];
+            publisherInfo["videoStats"] = EventUtils.preparePublisherVideoNetworkStatsEventData(record);
+            publisherInfo["local"] = true;
+            guard let stream = publisher.stream else {
+                self.emitEvent("\(publisherId):\(EventUtils.publisherPreface)videoNetworkStatsUpdated", data: publisherInfo);
+                return;
+            }
+            publisherInfo["stream"] = EventUtils.prepareJSStreamEventData(stream);
+            self.emitEvent("\(publisherId):\(EventUtils.publisherPreface)videoNetworkStatsUpdated", data: publisherInfo);
+        }
+    }
+
+    func publisher(_ publisher: OTPublisherKit, audioNetworkStatsUpdated stats: [OTPublisherKitAudioNetworkStats]) {
+        let publisherId = Utils.getPublisherId(publisher as! OTPublisher);
+        if (publisherId.count == 0) {
+            return;
+        }
+
+        for record in stats {
+            var publisherInfo: Dictionary<String, Any> = [:];
+            publisherInfo["audioStats"] = EventUtils.preparePublisherAudioNetworkStatsEventData(record);
+            publisherInfo["local"] = true;
+            guard let stream = publisher.stream else {
+                self.emitEvent("\(publisherId):\(EventUtils.publisherPreface)audioNetworkStatsUpdated", data: publisherInfo);
+                return
+            }
+            publisherInfo["stream"] = EventUtils.prepareJSStreamEventData(stream);
+            self.emitEvent("\(publisherId):\(EventUtils.publisherPreface)audioNetworkStatsUpdated", data: publisherInfo);
         }
     }
 }

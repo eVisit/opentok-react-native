@@ -42,7 +42,6 @@ class Utils {
         return publisherId.key;
     }
 
-    
     static func convertOTSubscriberVideoEventReasonToString(_ reason: OTSubscriberVideoEventReason) -> String {
         switch reason {
         case OTSubscriberVideoEventReason.publisherPropertyChanged:

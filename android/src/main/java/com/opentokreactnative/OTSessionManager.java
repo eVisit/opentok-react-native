@@ -6,7 +6,7 @@ package com.opentokreactnative;
 
 import android.util.Log;
 import android.widget.FrameLayout;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 
 import com.facebook.react.bridge.Arguments;
