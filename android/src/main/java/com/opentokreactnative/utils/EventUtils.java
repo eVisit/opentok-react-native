@@ -4,6 +4,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.opentok.android.Connection;
 import com.opentok.android.OpentokError;
+import com.opentok.android.PublisherKit;
 import com.opentok.android.Session;
 import com.opentok.android.Stream;
 import com.opentok.android.SubscriberKit;
@@ -21,7 +22,7 @@ public final class EventUtils {
         return connectionInfo;
     }
 
-    public static WritableMap prepareJSStreamMap(Stream stream) {
+    public static WritableMap prepareJSStreamMap(Stream stream, Session session) {
 
         WritableMap streamInfo = Arguments.createMap();
         if (stream != null) {
@@ -30,7 +31,7 @@ public final class EventUtils {
             streamInfo.putInt("width", stream.getVideoWidth());
             streamInfo.putString("creationTime", stream.getCreationTime().toString());
             streamInfo.putString("connectionId", stream.getConnection().getConnectionId());
-            streamInfo.putString("sessionId", stream.getSession().getSessionId());
+            streamInfo.putString("sessionId", session.getSessionId());
             streamInfo.putMap("connection", prepareJSConnectionMap(stream.getConnection()));
             streamInfo.putString("name", stream.getName());
             streamInfo.putBoolean("hasAudio", stream.hasAudio());
@@ -63,33 +64,33 @@ public final class EventUtils {
         return sessionInfo;
     }
 
-    public static WritableMap prepareStreamPropertyChangedEventData(String changedProperty, String oldValue, String newValue, Stream stream) {
+    public static WritableMap prepareStreamPropertyChangedEventData(String changedProperty, String oldValue, String newValue, Stream stream, Session session) {
 
         WritableMap streamPropertyEventData = Arguments.createMap();
         streamPropertyEventData.putString("changedProperty", changedProperty);
         streamPropertyEventData.putString("oldValue", oldValue);
         streamPropertyEventData.putString("newValue", newValue);
-        streamPropertyEventData.putMap("stream", prepareJSStreamMap(stream));
+        streamPropertyEventData.putMap("stream", prepareJSStreamMap(stream, session));
         return streamPropertyEventData;
     }
 
-    public static WritableMap prepareStreamPropertyChangedEventData(String changedProperty, WritableMap oldValue, WritableMap newValue, Stream stream) {
+    public static WritableMap prepareStreamPropertyChangedEventData(String changedProperty, WritableMap oldValue, WritableMap newValue, Stream stream, Session session) {
 
         WritableMap streamPropertyEventData = Arguments.createMap();
         streamPropertyEventData.putString("changedProperty", changedProperty);
         streamPropertyEventData.putMap("oldValue", oldValue);
         streamPropertyEventData.putMap("newValue", newValue);
-        streamPropertyEventData.putMap("stream", prepareJSStreamMap(stream));
+        streamPropertyEventData.putMap("stream", prepareJSStreamMap(stream, session));
         return streamPropertyEventData;
     }
 
-    public static WritableMap prepareStreamPropertyChangedEventData(String changedProperty, Boolean oldValue, Boolean newValue, Stream stream) {
+    public static WritableMap prepareStreamPropertyChangedEventData(String changedProperty, Boolean oldValue, Boolean newValue, Stream stream, Session session) {
 
         WritableMap streamPropertyEventData = Arguments.createMap();
         streamPropertyEventData.putString("changedProperty", changedProperty);
         streamPropertyEventData.putBoolean("oldValue", oldValue);
         streamPropertyEventData.putBoolean("newValue", newValue);
-        streamPropertyEventData.putMap("stream", prepareJSStreamMap(stream));
+        streamPropertyEventData.putMap("stream", prepareJSStreamMap(stream, session));
         return streamPropertyEventData;
     }
 
@@ -109,6 +110,22 @@ public final class EventUtils {
         videoStats.putInt("videoBytesReceived", stats.videoBytesReceived);
         videoStats.putInt("videoPacketsReceived", stats.videoPacketsReceived);
         return videoStats;
+    }
+
+    public static WritableMap preparePublisherVideoNetworkStats(PublisherKit.PublisherVideoStats stats) {
+        WritableMap videoStats = Arguments.createMap();
+        videoStats.putInt("videoPacketsLost", (int) stats.videoPacketsLost);
+        videoStats.putInt("videoBytesSent", (int) stats.videoBytesSent);
+        videoStats.putInt("videoPacketsSent", (int) stats.videoPacketsSent);
+        return videoStats;
+    }
+
+    public static WritableMap preparePublisherAudioNetworkStats(PublisherKit.PublisherAudioStats stats) {
+        WritableMap audioStats = Arguments.createMap();
+        audioStats.putInt("audioPacketsLost", (int) stats.audioPacketsLost);
+        audioStats.putInt("audioBytesSent", (int) stats.audioBytesSent);
+        audioStats.putInt("audioPacketsSent", (int) stats.audioPacketsSent);
+        return audioStats;
     }
 
     public static WritableMap createError(String message) {

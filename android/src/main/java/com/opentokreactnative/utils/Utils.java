@@ -59,4 +59,16 @@ public final class Utils {
         }
         return "";
     }
+
+    public static String getStreamIdByPublisher(PublisherKit publisherKit) {
+
+        Map<String, Publisher> publishers = OTRN.sharedState.getPublishers();
+        for (Map.Entry<String, Publisher> entry: publishers.entrySet()) {
+            Publisher mPublisher = entry.getValue();
+            if (mPublisher.equals(publisherKit)) {
+                return entry.getKey();
+            }
+        }
+        return "";
+    }
 }

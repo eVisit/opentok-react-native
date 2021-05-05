@@ -13,6 +13,7 @@
 
 @interface RCT_EXTERN_MODULE(OTSessionManager, RCTEventEmitter)
 
+RCT_EXTERN_METHOD(v219)
 RCT_EXTERN_METHOD(initSession:
                   (NSString*)apiKey
                   sessionId:(NSString*)sessionId
@@ -31,6 +32,8 @@ RCT_EXTERN_METHOD(publish:
                   callback:(RCTResponseSenderBlock*)callback)
 RCT_EXTERN_METHOD(subscribeToStream:
                   (NSString*)streamId
+                  sessionId:
+                  (NSString*)sessionId
                   properties:(NSDictionary*)properties
                   callback:(RCTResponseSenderBlock*)callback)
 RCT_EXTERN_METHOD(removeSubscriber:

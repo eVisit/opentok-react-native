@@ -40,10 +40,16 @@ export default class OTSubscriber extends Component {
   }
 
   subscribeToStream = (stream) => {
-    OT.subscribeToStream(stream.streamId, sanitizeProperties(this.props.properties), (error) => {
+    if (OT.v219) {
+      OT.subscribeToStream(stream.streamId, stream.sessionId, sanitizeProperties(this.props.properties), (error) => {
       if (error)
         this.otrnEventHandler(error);
-    });
+    })} else {
+      OT.subscribeToStream(stream.streamId, sanitizeProperties(this.props.properties), (error) => {
+      if (error)
+        this.otrnEventHandler(error);
+      })
+    }
   }
 
   resubscribe = (prevProps = {}) => {

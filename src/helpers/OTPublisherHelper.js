@@ -82,6 +82,8 @@ const sanitizePublisherEvents = (publisherId, events) => {
       streamDestroyed: 'onStreamDestroyed',
       error: 'onError',
       audioLevel: 'onAudioLevelUpdated',
+      audioNetworkStats: 'onAudioStats',
+      videoNetworkStats: 'onVideoStats'
     },
   };
   return reassignEvents('publisher', customEvents, events, publisherId);
